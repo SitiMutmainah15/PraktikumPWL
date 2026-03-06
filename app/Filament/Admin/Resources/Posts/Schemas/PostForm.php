@@ -20,50 +20,56 @@ class PostForm
     {
         return $schema
             ->components([
-                Section::make('Post Details')
-                    ->description('Fill in the details of the post')
-                    ->icon('heroicon-o-document-text')
+                Section::make()
                     ->schema([
+                        Section::make('Post Details')
+                            ->description('Fill in the details of the post')
+                            ->icon('heroicon-o-document-text')
+                            ->schema([
+                                Group::make([
+                                    TextInput::make('title')
+                                        ->required()
+                                        ->minLength(5),
+
+                                    TextInput::make('slug')
+                                        ->required()
+                                        ->unique(ignoreRecord: true),
+
+                                    Select::make('category_id')
+                                        ->relationship('category', 'name')
+                                        ->preload()
+                                        ->searchable()
+                                        ->required(),
+
+                                    ColorPicker::make('color'),
+                                ])->columns(2),
+
+                                MarkdownEditor::make('body')
+                                    ->columnSpanFull(),
+                            ])
+                            ->columnSpan(8),
+
                         Group::make([
-                            TextInput::make('title')
-                                ->required()
-                                ->minLength(5),
+                            Section::make('Image Upload')
+                                ->icon('heroicon-o-photo')
+                                ->schema([
+                                    FileUpload::make('image')
+                                        ->disk('public')
+                                        ->directory('posts')
+                                        ->image(),
+                                ]),
 
-                            TextInput::make('slug')
-                                ->required()
-                                ->unique(ignoreRecord: true),
-
-                            Select::make('category_id')
-                                ->relationship('category', 'name')
-                                ->preload()
-                                ->searchable()
-                                ->required(),
-
-                            ColorPicker::make('color'),
-                        ])->columns(2),
-
-                        MarkdownEditor::make('body'),
+                            Section::make('Meta Information')
+                                ->icon('heroicon-o-information-circle')
+                                ->schema([
+                                    TagsInput::make('tags'),
+                                    Checkbox::make('published'),
+                                    DateTimePicker::make('published_at'),
+                                ]),
+                        ])
+                            ->columnSpan(4),
                     ])
-                    ->columnSpan(2),
-
-                Group::make([
-                    Section::make('Image Upload')
-                        ->schema([
-                            FileUpload::make('image')
-                                ->disk('public')
-                                ->directory('posts')
-                                ->image(),
-                        ]),
-
-                    Section::make('Meta Information')
-                        ->schema([
-                            TagsInput::make('tags'),
-                            Checkbox::make('published'),
-                            DateTimePicker::make('published_at'),
-                        ]),
-                ])
-                    ->columnSpan(1),
-            ])
-            ->columns(3);
+                    ->columns(12),
+            ]);
     }
 }
