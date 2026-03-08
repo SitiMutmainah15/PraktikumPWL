@@ -18,6 +18,7 @@ class ProductInfolist
                     ->vertical()
                     ->tabs([
                         Tab::make('Product Info')
+                            ->icon('heroicon-o-information-circle')
                             ->schema([
                                 TextEntry::make('name')
                                     ->label('Product Name')
@@ -40,27 +41,48 @@ class ProductInfolist
                                     ->label('Product Creation Date')
                                     ->date('d M Y')
                                     ->color('info'),
-                            ])
-                            ->columnSpanFull(),
+                            ]),
 
                         Tab::make('Pricing & Stock')
+                            ->icon('heroicon-o-currency-dollar')
                             ->schema([
                                 TextEntry::make('price')
                                     ->label('Product Price')
                                     ->weight('bold')
                                     ->color('primary')
-                                    ->icon('heroicon-o-currency-dollar')
+                                    ->icon('heroicon-o-banknotes')
                                     ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.')),
 
                                 TextEntry::make('stock')
                                     ->label('Product Stock')
+                                    ->badge()
                                     ->icon('heroicon-o-cube')
-                                    ->weight('bold')
-                                    ->color('primary'),
-                            ])
-                            ->columnSpanFull(),
+                                    ->formatStateUsing(function ($state) {
+                                        if ($state > 10) {
+                                            return 'Banyak (' . $state . ')';
+                                        }
+
+                                        if ($state > 0) {
+                                            return 'Sedikit (' . $state . ')';
+                                        }
+
+                                        return 'Habis';
+                                    })
+                                    ->color(function ($state) {
+                                        if ($state > 10) {
+                                            return 'success';
+                                        }
+
+                                        if ($state > 0) {
+                                            return 'warning';
+                                        }
+
+                                        return 'danger';
+                                    }),
+                            ]),
 
                         Tab::make('Media & Status')
+                            ->icon('heroicon-o-photo')
                             ->schema([
                                 ImageEntry::make('image')
                                     ->label('Product Image')
@@ -77,8 +99,7 @@ class ProductInfolist
                                     ->badge()
                                     ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No')
                                     ->color(fn ($state) => $state ? 'warning' : 'gray'),
-                            ])
-                            ->columnSpanFull(),
+                            ]),
                     ])
                     ->columnSpanFull(),
             ]);
