@@ -17,17 +17,35 @@ class ProductsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('sku'),
-                TextColumn::make('price'),
-                TextColumn::make('stock'),
+                TextColumn::make('name')
+                    ->label('Product Name')
+                    ->sortable(),
+
+                TextColumn::make('sku')
+                    ->label('SKU')
+                    ->sortable(),
+
+                TextColumn::make('price')
+                    ->label('Price')
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->dateTime()
+                    ->sortable(),
+
+                TextColumn::make('stock')
+                    ->label('Stock')
+                    ->sortable(),
+
                 ImageColumn::make('image')
                     ->disk('public'),
 
-                IconColumn::make('is_active') 
-                    ->label('Status') 
-                    ->boolean(), 
+                IconColumn::make('is_active')
+                    ->label('Status')
+                    ->boolean(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
