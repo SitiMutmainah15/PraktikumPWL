@@ -21,6 +21,7 @@ class ProductForm
                 Wizard::make([
                     Step::make('Product Info')
                         ->description('Isi Informasi Produk')
+                        ->icon('heroicon-o-information-circle')
                         ->schema([
                             Group::make([
                                 TextInput::make('name')
@@ -33,10 +34,12 @@ class ProductForm
 
                     Step::make('Product Price and Stock')
                         ->description('Isi Harga Produk')
+                        ->icon('heroicon-o-currency-dollar')
                         ->schema([
                             Group::make([
                                 TextInput::make('price')
-                                    ->required(),
+                                    ->required()
+                                    ->minValue(1),
                                 TextInput::make('stock')
                                     ->required(),
                             ])->columns(2),
@@ -45,14 +48,18 @@ class ProductForm
 
                     Step::make('Media and status')
                         ->description('Isi Gambar Produk')
+                        ->icon('heroicon-o-currency-dollar')
                         ->schema([
                             FileUpload::make('image')
                                 ->disk('public')
                                 ->directory('products'),
 
-                            Checkbox::make('is_active'),
-                            Checkbox::make('is_featured'),
-                        ]),
+                            Checkbox::make('is_active')
+                            ->label('Is active'),
+                            Checkbox::make('is_featured')
+                            ->label('Is featured'),
+                        ])
+                        ->columns(1),
                 ])
                     ->columnSpanFull()
                     ->submitAction(
@@ -60,7 +67,7 @@ class ProductForm
                             ->label('Save Product')
                             ->button()
                             ->color('primary')
-                            ->submit('save')
+                            ->submit('save'), 
                     )
             ]);
     }
