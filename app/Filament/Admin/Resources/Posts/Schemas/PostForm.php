@@ -47,7 +47,7 @@ class PostForm
                             Select::make('category_id')
                                 ->relationship('category', 'name')
                                 ->options(Category::all()->pluck("name", "id"))
-                               // ->preload()
+                                // ->preload()
                                 ->searchable()
                                 ->required()
                                 ->validationMessages([
@@ -79,8 +79,11 @@ class PostForm
                     Section::make('Meta Information')
                         ->icon('heroicon-o-information-circle')
                         ->schema([
-                            TagsInput::make('tags'),
-
+                            // TagsInput::make('tags'),
+                            Select::make('tags')
+                                ->relationship('tags', 'name')
+                                ->multiple()
+                                ->preload(),
                             Checkbox::make('published'),
 
                             DateTimePicker::make('published_at'),
